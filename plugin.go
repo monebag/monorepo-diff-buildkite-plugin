@@ -22,6 +22,7 @@ type Plugin struct {
 	Env           map[string]string
 	RawNotify     []map[string]interface{} `json:"notify" yaml:",omitempty"`
 	Notify        []PluginNotify           `yaml:"notify,omitempty"`
+	Plugins       interface{}              `yaml:"plugins,omitempty"`
 }
 
 // HookConfig Plugin hook configuration
@@ -81,6 +82,7 @@ type Step struct {
 	SoftFail  interface{}              `json:"soft_fail" yaml:"soft_fail,omitempty"`
 	RawNotify []map[string]interface{} `json:"notify" yaml:",omitempty"`
 	Notify    []StepNotify             `yaml:"notify,omitempty"`
+	Plugins   interface{}              `yaml:"plugins,omitempty"`
 }
 
 // Agent is Buildkite agent definition

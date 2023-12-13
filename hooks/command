@@ -87,19 +87,24 @@ download_binary_and_run() {
   fi
 
   local test_mode="${BUILDKITE_PLUGIN_MONOREPO_DIFF_BUILDKITE_PLUGIN_TEST_MODE:-false}"
+  local _command="./${_executable}"
 
   if [[ "$test_mode" == "false" ]]; then
-    downloader "$_url" "$_executable"
+    if check_cmd monorepo-diff-buildkite-plugin; then
+      _command="$(command -v monorepo-diff-buildkite-plugin)"
+    else
+      downloader "$_url" "$_executable"
 
-    if [ $? != 0 ]; then
-      say "failed to download $_url"
-      exit 1
+      if [ $? != 0 ]; then
+        say "failed to download $_url"
+        exit 1
+      fi
+
+      chmod +x ${_executable}
     fi
-
-    chmod +x ${_executable}
   fi
 
-  ./${_executable}
+  ${_command}
 }
 
 download_binary_and_run "$@" || exit 1

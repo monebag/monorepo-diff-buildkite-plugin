@@ -298,3 +298,25 @@ steps:
 - command: cat ./foo-file.txt
 EOM
 }
+
+@test "download skipped when command already present" {
+  # Disable "test" mode, which would have skipped the download anyway.
+  export BUILDKITE_PLUGIN_MONOREPO_DIFF_BUILDKITE_PLUGIN_TEST_MODE="false"
+
+  # Stub uname -s to return a fake OS, that will fail to be downloaded if
+  # we try.
+  stub uname \
+    "-s : echo 'TESTOS'" \
+    "-m : echo 'x86'"
+
+  # Stub monorepo-diff-buildkite-plugin, so that command -v sees it.
+  stub monorepo-diff-buildkite-plugin \
+    ""
+
+  run $PWD/hooks/command
+
+  assert_success
+
+  unstub uname
+  unstub monorepo-diff-buildkite-plugin
+}
